@@ -63,6 +63,18 @@ class BowlingGameTest {
         assertThrows(IllegalStateException.class, () -> game.roll(0));
     }
 
+    @Test
+    @DisplayName("A6 - roll(10) marca STRIKE y avanza al siguiente frame")
+    void rollTenPins_marksStrikeAndAdvancesFrame() {
+        BowlingGame game = new BowlingGame();
+
+        game.roll(10);
+        assertEquals(FrameStatus.STRIKE, game.getFrames().get(0).getStatus());
+
+        game.roll(3);
+        assertEquals(2, game.getFrames().size());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
