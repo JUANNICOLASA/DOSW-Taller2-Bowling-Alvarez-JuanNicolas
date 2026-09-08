@@ -32,9 +32,7 @@ public class BowlingGame {
                     "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
         }
         frame.addRoll(pins);
-        if (frame.isStrike() || frame.getRolls().size() == 2) {
-            currentFrame++;
-        }
+        advanceIfClosed(frame);
     }
 
     private void validatePinRange(int pins) {
@@ -51,6 +49,12 @@ public class BowlingGame {
         return frames.get(currentFrame);
     }
 
+    private void advanceIfClosed(Frame frame) {
+        if (frame.isComplete()) {
+            currentFrame++;
+        }
+    }
+
     /** Puntaje total. Lanza IllegalStateException si el juego no esta completo. */
     public int score() {
         // TODO: implementar con TDD
@@ -60,7 +64,7 @@ public class BowlingGame {
     /** true cuando los 10 frames han sido completados. */
     public boolean isComplete() {
         return frames.size() == TOTAL_FRAMES
-                && frames.get(TOTAL_FRAMES - 1).getRolls().size() == 2;
+                && frames.get(TOTAL_FRAMES - 1).isComplete();
     }
 
     public List<Frame> getFrames() { return List.copyOf(frames); }

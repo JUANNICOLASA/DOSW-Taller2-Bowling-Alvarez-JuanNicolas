@@ -39,6 +39,11 @@ public class Frame {
         return !rolls.isEmpty() && rolls.get(0) == MAX_PINS;
     }
 
+    /** true cuando el frame ya no admite mas tiros. */
+    public boolean isComplete() {
+        return isStrike() || rolls.size() == 2;
+    }
+
     /** Estado del frame segun los tiros registrados. */
     public FrameStatus getStatus() {
         if (isStrike()) {
