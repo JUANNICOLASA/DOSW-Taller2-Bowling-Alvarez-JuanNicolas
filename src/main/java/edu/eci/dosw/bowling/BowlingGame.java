@@ -20,10 +20,19 @@ public class BowlingGame {
         this.currentFrame = 0;
     }
 
-    /** Registra pinos derribados. Lanza IllegalArgumentException si pins < 0 o > 10. */
+    /** Registra pinos derribados. Valida el rango y la capacidad del frame. */
     public void roll(int pins) {
         validatePinRange(pins);
-        currentFrameOrCreate().addRoll(pins);
+        Frame frame = currentFrameOrCreate();
+        int alreadyDown = 0;
+        for (int rolled : frame.getRolls()) {
+            alreadyDown += rolled;
+        }
+        if (alreadyDown + pins > MAX_PINS) {
+            throw new IllegalArgumentException(
+                    "Un frame no puede derribar mas de " + MAX_PINS + " pinos");
+        }
+        frame.addRoll(pins);
     }
 
     private void validatePinRange(int pins) {
