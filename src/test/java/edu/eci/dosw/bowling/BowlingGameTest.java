@@ -45,6 +45,15 @@ class BowlingGameTest {
         assertThrows(IllegalArgumentException.class, () -> game.roll(11));
     }
 
+    @Test
+    @DisplayName("A4 - dos tiros de un frame no pueden sumar mas de 10")
+    void twoRollsExceedingTenPins_throwsIllegalArgumentException() {
+        BowlingGame game = new BowlingGame();
+        game.roll(7);
+
+        assertThrows(IllegalArgumentException.class, () -> game.roll(6));
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
