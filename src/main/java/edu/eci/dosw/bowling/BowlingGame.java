@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class BowlingGame {
 
+    /** Frames que tiene un juego completo. */
+    public static final int TOTAL_FRAMES = 10;
+
     private final List<Frame> frames;
     private int currentFrame;
 
@@ -17,15 +20,21 @@ public class BowlingGame {
         this.currentFrame = 0;
     }
 
-    /** Registra pinos derribados. Valida el rango y la capacidad del frame. */
+    /** Registra pinos derribados. Valida rango, capacidad del frame y fin del juego. */
     public void roll(int pins) {
         validatePinRange(pins);
+        if (isComplete()) {
+            throw new IllegalStateException("El juego ya termino: no se admiten mas tiros");
+        }
         Frame frame = currentFrameOrCreate();
         if (frame.wouldExceedPins(pins)) {
             throw new IllegalArgumentException(
                     "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
         }
         frame.addRoll(pins);
+        if (frame.getRolls().size() == 2) {
+            currentFrame++;
+        }
     }
 
     private void validatePinRange(int pins) {
@@ -50,8 +59,8 @@ public class BowlingGame {
 
     /** true cuando los 10 frames han sido completados. */
     public boolean isComplete() {
-        // TODO: implementar con TDD
-        return false;
+        return frames.size() == TOTAL_FRAMES
+                && frames.get(TOTAL_FRAMES - 1).getRolls().size() == 2;
     }
 
     public List<Frame> getFrames() { return List.copyOf(frames); }
