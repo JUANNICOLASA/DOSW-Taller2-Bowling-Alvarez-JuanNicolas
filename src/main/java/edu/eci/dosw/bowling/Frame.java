@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Un frame de un juego de bowling. Guarda los tiros que se hicieron en el
- * y conoce las reglas de capacidad de pinos.
+ * Un frame de un juego de bowling. Guarda los tiros que se hicieron en el,
+ * conoce las reglas de capacidad de pinos y su propio estado.
  */
 public class Frame {
 
@@ -22,7 +22,6 @@ public class Frame {
         return List.copyOf(rolls);
     }
 
-    /** Total de pinos derribados dentro de este frame. */
     public int pinsKnockedDown() {
         int total = 0;
         for (int pins : rolls) {
@@ -31,8 +30,20 @@ public class Frame {
         return total;
     }
 
-    /** true si agregar {@code pins} derribaria mas pinos de los que hay en pie. */
     public boolean wouldExceedPins(int pins) {
         return pinsKnockedDown() + pins > MAX_PINS;
+    }
+
+    /** true si el primer tiro derribo los 10 pinos. */
+    public boolean isStrike() {
+        return !rolls.isEmpty() && rolls.get(0) == MAX_PINS;
+    }
+
+    /** Estado del frame segun los tiros registrados. */
+    public FrameStatus getStatus() {
+        if (isStrike()) {
+            return FrameStatus.STRIKE;
+        }
+        return FrameStatus.OPEN;
     }
 }

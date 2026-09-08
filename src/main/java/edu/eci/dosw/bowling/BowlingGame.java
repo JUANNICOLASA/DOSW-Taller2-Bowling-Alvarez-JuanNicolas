@@ -32,7 +32,7 @@ public class BowlingGame {
                     "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
         }
         frame.addRoll(pins);
-        if (frame.getRolls().size() == 2) {
+        if (frame.isStrike() || frame.getRolls().size() == 2) {
             currentFrame++;
         }
     }
