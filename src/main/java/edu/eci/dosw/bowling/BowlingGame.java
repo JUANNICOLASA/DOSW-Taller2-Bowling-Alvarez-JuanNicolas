@@ -19,10 +19,14 @@ public class BowlingGame {
 
     /** Registra pinos derribados. */
     public void roll(int pins) {
-        if (frames.isEmpty()) {
+        currentFrameOrCreate().addRoll(pins);
+    }
+
+    private Frame currentFrameOrCreate() {
+        if (currentFrame >= frames.size()) {
             frames.add(new Frame());
         }
-        frames.get(currentFrame).addRoll(pins);
+        return frames.get(currentFrame);
     }
 
     /** Puntaje total. Lanza IllegalStateException si el juego no esta completo. */
