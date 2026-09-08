@@ -17,10 +17,10 @@ public class BowlingGame {
         this.currentFrame = 0;
     }
 
-    /** Registra pinos derribados. Lanza IllegalArgumentException si pins < 0. */
+    /** Registra pinos derribados. Lanza IllegalArgumentException si pins < 0 o > 10. */
     public void roll(int pins) {
-        if (pins < 0) {
-            throw new IllegalArgumentException("El numero de pinos no puede ser negativo: " + pins);
+        if (pins < 0 || pins > 10) {
+            throw new IllegalArgumentException("El numero de pinos debe estar entre 0 y 10: " + pins);
         }
         currentFrameOrCreate().addRoll(pins);
     }
