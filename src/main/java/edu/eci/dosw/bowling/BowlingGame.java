@@ -9,6 +9,9 @@ import java.util.List;
  */
 public class BowlingGame {
 
+    /** Pinos disponibles en cada tiro inicial. */
+    private static final int MAX_PINS = 10;
+
     private final List<Frame> frames;
     private int currentFrame;
 
@@ -19,10 +22,15 @@ public class BowlingGame {
 
     /** Registra pinos derribados. Lanza IllegalArgumentException si pins < 0 o > 10. */
     public void roll(int pins) {
-        if (pins < 0 || pins > 10) {
-            throw new IllegalArgumentException("El numero de pinos debe estar entre 0 y 10: " + pins);
-        }
+        validatePinRange(pins);
         currentFrameOrCreate().addRoll(pins);
+    }
+
+    private void validatePinRange(int pins) {
+        if (pins < 0 || pins > MAX_PINS) {
+            throw new IllegalArgumentException(
+                    "El numero de pinos debe estar entre 0 y " + MAX_PINS + ", pero fue: " + pins);
+        }
     }
 
     private Frame currentFrameOrCreate() {
