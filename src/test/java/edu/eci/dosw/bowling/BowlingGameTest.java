@@ -29,6 +29,14 @@ class BowlingGameTest {
         assertEquals(0, game.getFrames().get(0).getRolls().get(0));
     }
 
+    @Test
+    @DisplayName("A2 - roll(-1) lanza IllegalArgumentException")
+    void rollNegativePins_throwsIllegalArgumentException() {
+        BowlingGame game = new BowlingGame();
+
+        assertThrows(IllegalArgumentException.class, () -> game.roll(-1));
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
