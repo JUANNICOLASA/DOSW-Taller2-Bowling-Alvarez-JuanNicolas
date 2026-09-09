@@ -158,6 +158,15 @@ class BowlingGameTest {
         assertTrue(game.isComplete());
     }
 
+    @Test
+    @DisplayName("C6 - el juego perfecto queda completo tras el doceavo strike")
+    void isComplete_afterPerfectGame_isTrue() {
+        BowlingGame game = new BowlingGame();
+        rollPerfectGame(game);
+
+        assertTrue(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
