@@ -10,6 +10,10 @@ public class BowlingScorer {
 
     /** Puntaje total del juego. */
     public int calculate(List<Frame> frames) {
-        return 0;
+        int total = 0;
+        for (Frame frame : frames) {
+            total += frame.pinsKnockedDown();
+        }
+        return total;
     }
 }
