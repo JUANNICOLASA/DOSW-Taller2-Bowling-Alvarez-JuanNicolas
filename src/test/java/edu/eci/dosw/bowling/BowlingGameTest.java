@@ -142,6 +142,22 @@ class BowlingGameTest {
         assertTrue(game.isComplete());
     }
 
+    @Test
+    @DisplayName("C5 - el strike del frame 10 exige los dos tiros de bono")
+    void isComplete_withStrikeInTenthFrame_requiresTwoBonusRolls() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+
+        game.roll(10);
+        assertFalse(game.isComplete());
+
+        game.roll(10);
+        assertFalse(game.isComplete());
+
+        game.roll(10);
+        assertTrue(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
