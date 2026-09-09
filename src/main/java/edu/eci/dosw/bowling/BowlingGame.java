@@ -13,10 +13,12 @@ public class BowlingGame {
     public static final int TOTAL_FRAMES = 10;
 
     private final List<Frame> frames;
+    private final BowlingScorer scorer;
     private int currentFrame;
 
     public BowlingGame() {
         this.frames = new ArrayList<>();
+        this.scorer = new BowlingScorer();
         this.currentFrame = 0;
     }
 
@@ -55,10 +57,9 @@ public class BowlingGame {
         }
     }
 
-    /** Puntaje total. Lanza IllegalStateException si el juego no esta completo. */
+    /** Puntaje total del juego. */
     public int score() {
-        // TODO: implementar con TDD
-        return 0;
+        return scorer.calculate(frames);
     }
 
     /** true cuando los 10 frames han sido completados. */
