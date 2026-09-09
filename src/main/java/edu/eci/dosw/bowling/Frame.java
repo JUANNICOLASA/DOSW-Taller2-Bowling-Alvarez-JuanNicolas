@@ -44,10 +44,20 @@ public class Frame {
         return isStrike() || rolls.size() == 2;
     }
 
+    /** true si los 10 pinos cayeron en dos tiros del mismo frame. */
+    public boolean isSpare() {
+        return !isStrike()
+                && rolls.size() >= 2
+                && rolls.get(0) + rolls.get(1) == MAX_PINS;
+    }
+
     /** Estado del frame segun los tiros registrados. */
     public FrameStatus getStatus() {
         if (isStrike()) {
             return FrameStatus.STRIKE;
+        }
+        if (isSpare()) {
+            return FrameStatus.SPARE;
         }
         return FrameStatus.OPEN;
     }
