@@ -75,6 +75,17 @@ class BowlingGameTest {
         assertEquals(2, game.getFrames().size());
     }
 
+    @Test
+    @DisplayName("A7 - roll(5) + roll(5) marca SPARE")
+    void twoRollsCompletingTenPins_marksSpare() {
+        BowlingGame game = new BowlingGame();
+
+        game.roll(5);
+        game.roll(5);
+
+        assertEquals(FrameStatus.SPARE, game.getFrames().get(0).getStatus());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
