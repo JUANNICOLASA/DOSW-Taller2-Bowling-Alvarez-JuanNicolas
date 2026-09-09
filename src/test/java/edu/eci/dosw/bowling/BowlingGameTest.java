@@ -101,6 +101,14 @@ class BowlingGameTest {
         assertEquals(3, lastFrame(game).getRolls().size());
     }
 
+    @Test
+    @DisplayName("C1 - isComplete() es false al iniciar el juego")
+    void isComplete_atGameStart_isFalse() {
+        BowlingGame game = new BowlingGame();
+
+        assertFalse(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
