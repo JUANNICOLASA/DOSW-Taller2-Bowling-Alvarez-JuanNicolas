@@ -86,6 +86,21 @@ class BowlingGameTest {
         assertEquals(FrameStatus.SPARE, game.getFrames().get(0).getStatus());
     }
 
+    @Test
+    @DisplayName("A8 - el frame 10 con strike acepta tres tiros")
+    void tenthFrameWithStrike_acceptsThreeRolls() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+
+        assertDoesNotThrow(() -> {
+            game.roll(10);
+            game.roll(10);
+            game.roll(10);
+        });
+
+        assertEquals(3, lastFrame(game).getRolls().size());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
