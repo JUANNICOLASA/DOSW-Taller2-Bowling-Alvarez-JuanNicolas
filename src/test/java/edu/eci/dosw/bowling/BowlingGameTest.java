@@ -119,6 +119,15 @@ class BowlingGameTest {
         assertFalse(game.isComplete());
     }
 
+    @Test
+    @DisplayName("C3 - isComplete() es true con diez frames normales")
+    void isComplete_afterTenRegularFrames_isTrue() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 20, 4);
+
+        assertTrue(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
