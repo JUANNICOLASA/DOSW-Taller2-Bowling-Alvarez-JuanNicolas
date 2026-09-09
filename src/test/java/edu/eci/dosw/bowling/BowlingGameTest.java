@@ -128,6 +128,20 @@ class BowlingGameTest {
         assertTrue(game.isComplete());
     }
 
+    @Test
+    @DisplayName("C4 - el spare del frame 10 exige el tiro de bono")
+    void isComplete_withSpareInTenthFrame_requiresBonusRoll() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+        game.roll(5);
+        game.roll(5);
+
+        assertFalse(game.isComplete(), "un spare en el frame 10 otorga un tiro extra");
+
+        game.roll(7);
+        assertTrue(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
