@@ -61,9 +61,14 @@ public class Frame {
 
     /** Pinos que siguen en pie justo antes del proximo tiro de este frame. */
     private int standingPins() {
-        if (isLastFrame() && isStrike()) {
-            boolean pinsWereReset = rolls.size() == 1 || rolls.get(1) == MAX_PINS;
-            return pinsWereReset ? MAX_PINS : MAX_PINS - rolls.get(1);
+        if (isLastFrame()) {
+            if (isStrike()) {
+                boolean pinsWereReset = rolls.size() == 1 || rolls.get(1) == MAX_PINS;
+                return pinsWereReset ? MAX_PINS : MAX_PINS - rolls.get(1);
+            }
+            if (isSpare()) {
+                return MAX_PINS;
+            }
         }
         return MAX_PINS - pinsKnockedDown();
     }
@@ -71,7 +76,8 @@ public class Frame {
     /** true cuando el frame ya no admite mas tiros. */
     public boolean isComplete() {
         if (isLastFrame()) {
-            return isStrike() ? rolls.size() == LAST_FRAME_ROLLS : rolls.size() == REGULAR_ROLLS;
+            boolean hasBonusRoll = isStrike() || isSpare();
+            return hasBonusRoll ? rolls.size() == LAST_FRAME_ROLLS : rolls.size() == REGULAR_ROLLS;
         }
         return isStrike() || rolls.size() == REGULAR_ROLLS;
     }
