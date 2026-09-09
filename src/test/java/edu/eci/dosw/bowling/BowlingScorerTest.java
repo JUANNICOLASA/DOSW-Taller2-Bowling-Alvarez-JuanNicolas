@@ -22,6 +22,15 @@ class BowlingScorerTest {
         assertEquals(0, scorer.calculate(game.getFrames()));
     }
 
+    @Test
+    @DisplayName("B2 - un juego sin strikes ni spares suma los pinos derribados")
+    void gameWithoutBonuses_scoresSumOfPins() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 20, 4);
+
+        assertEquals(80, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
