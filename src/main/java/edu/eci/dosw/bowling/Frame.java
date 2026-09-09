@@ -4,15 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Un frame de un juego de bowling. Guarda los tiros que se hicieron en el,
- * conoce las reglas de capacidad de pinos y su propio estado.
+ * Un frame de un juego de bowling. Conoce su numero, sus tiros,
+ * las reglas de capacidad de pinos y su propio estado.
  */
 public class Frame {
 
     /** Pinos disponibles en un frame. */
     public static final int MAX_PINS = 10;
 
+    /** Numero del ultimo frame del juego. */
+    public static final int LAST_FRAME_NUMBER = 10;
+
+    private final int number;
     private final List<Integer> rolls = new ArrayList<>();
+
+    public Frame(int number) {
+        this.number = number;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    /** true si este es el frame 10, que tiene reglas propias. */
+    public boolean isLastFrame() {
+        return number == LAST_FRAME_NUMBER;
+    }
 
     public void addRoll(int pins) {
         rolls.add(pins);
@@ -31,27 +48,36 @@ public class Frame {
     }
 
     public boolean wouldExceedPins(int pins) {
+        if (isLastFrame() && isStrike()) {
+            if (rolls.size() == 1 || rolls.get(1) == MAX_PINS) {
+                return pins > MAX_PINS;
+            }
+            return rolls.get(1) + pins > MAX_PINS;
+        }
         return pinsKnockedDown() + pins > MAX_PINS;
-    }
-
-    /** true si el primer tiro derribo los 10 pinos. */
-    public boolean isStrike() {
-        return !rolls.isEmpty() && rolls.get(0) == MAX_PINS;
     }
 
     /** true cuando el frame ya no admite mas tiros. */
     public boolean isComplete() {
+        if (isLastFrame()) {
+            if (isStrike()) {
+                return rolls.size() == 3;
+            }
+            return rolls.size() == 2;
+        }
         return isStrike() || rolls.size() == 2;
     }
 
-    /** true si los 10 pinos cayeron en dos tiros del mismo frame. */
+    public boolean isStrike() {
+        return !rolls.isEmpty() && rolls.get(0) == MAX_PINS;
+    }
+
     public boolean isSpare() {
         return !isStrike()
                 && rolls.size() >= 2
                 && rolls.get(0) + rolls.get(1) == MAX_PINS;
     }
 
-    /** Estado del frame segun los tiros registrados. */
     public FrameStatus getStatus() {
         if (isStrike()) {
             return FrameStatus.STRIKE;

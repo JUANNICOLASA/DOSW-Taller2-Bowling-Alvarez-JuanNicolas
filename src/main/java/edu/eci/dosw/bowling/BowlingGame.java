@@ -44,7 +44,7 @@ public class BowlingGame {
 
     private Frame currentFrameOrCreate() {
         if (currentFrame >= frames.size()) {
-            frames.add(new Frame());
+            frames.add(new Frame(currentFrame + 1));
         }
         return frames.get(currentFrame);
     }
