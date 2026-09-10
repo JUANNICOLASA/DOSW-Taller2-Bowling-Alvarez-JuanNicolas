@@ -26,7 +26,7 @@ public class BowlingScorer {
 
     private int frameScore(List<Frame> frames, int index) {
         Frame frame = frames.get(index);
-        if (frame.isLastFrame() && frame.isSpare()) {
+        if (frame.isLastFrame()) {
             return frame.pinsKnockedDown();
         }
         if (frame.isStrike()) {
