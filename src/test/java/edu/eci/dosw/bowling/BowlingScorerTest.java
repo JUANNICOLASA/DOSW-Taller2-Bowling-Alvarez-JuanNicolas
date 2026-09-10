@@ -96,6 +96,26 @@ class BowlingScorerTest {
         assertThrows(IllegalStateException.class, game::score);
     }
 
+    @Test
+    @DisplayName("Borde - calculate(null) lanza IllegalArgumentException")
+    void calculateWithNullFrames_throwsIllegalArgumentException() {
+        BowlingScorer scorer = new BowlingScorer();
+
+        assertThrows(IllegalArgumentException.class, () -> scorer.calculate(null));
+    }
+
+    @Test
+    @DisplayName("Borde - un juego abierto que termina en spare en el frame 10")
+    void openGameEndingWithSpareInTenthFrame_scoresCorrectly() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 3);
+        game.roll(6);
+        game.roll(4);
+        game.roll(7);
+
+        assertEquals(71, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
