@@ -44,6 +44,18 @@ class BowlingScorerTest {
         assertEquals(16, game.score());
     }
 
+    @Test
+    @DisplayName("B4 - un strike suma 10 mas los dos tiros siguientes")
+    void strikeInFirstFrame_addsNextTwoRollsAsBonus() {
+        BowlingGame game = new BowlingGame();
+        game.roll(10);
+        game.roll(4);
+        game.roll(3);
+        rollMany(game, 16, 0);
+
+        assertEquals(24, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
