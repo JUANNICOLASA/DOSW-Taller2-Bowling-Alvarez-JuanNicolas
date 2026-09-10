@@ -78,6 +78,15 @@ class BowlingScorerTest {
         assertEquals(150, game.score());
     }
 
+    @Test
+    @DisplayName("B7 - juego perfecto: 12 strikes puntua 300")
+    void perfectGame_scores300() {
+        BowlingGame game = new BowlingGame();
+        rollPerfectGame(game);
+
+        assertEquals(300, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
