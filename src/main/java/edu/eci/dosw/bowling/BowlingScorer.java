@@ -1,5 +1,6 @@
 package edu.eci.dosw.bowling;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,25 +21,23 @@ public class BowlingScorer {
     private int frameScore(List<Frame> frames, int index) {
         Frame frame = frames.get(index);
         if (frame.isStrike()) {
-            return Frame.MAX_PINS + pinsOfNextFrame(frames, index);
+            return Frame.MAX_PINS + sumOfNextRolls(frames, index, 2);
         }
         if (frame.isSpare()) {
-            return Frame.MAX_PINS + firstRollOfNextFrame(frames, index);
+            return Frame.MAX_PINS + sumOfNextRolls(frames, index, 1);
         }
         return frame.pinsKnockedDown();
     }
 
-    private int pinsOfNextFrame(List<Frame> frames, int index) {
-        int next = index + 1;
-        return next >= frames.size() ? 0 : frames.get(next).pinsKnockedDown();
-    }
-
-    private int firstRollOfNextFrame(List<Frame> frames, int index) {
-        int next = index + 1;
-        if (next >= frames.size()) {
-            return 0;
+    private int sumOfNextRolls(List<Frame> frames, int index, int howMany) {
+        List<Integer> upcoming = new ArrayList<>();
+        for (int i = index + 1; i < frames.size(); i++) {
+            upcoming.addAll(frames.get(i).getRolls());
         }
-        List<Integer> rolls = frames.get(next).getRolls();
-        return rolls.isEmpty() ? 0 : rolls.get(0);
+        int sum = 0;
+        for (int i = 0; i < howMany && i < upcoming.size(); i++) {
+            sum += upcoming.get(i);
+        }
+        return sum;
     }
 }
