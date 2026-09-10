@@ -56,6 +56,19 @@ class BowlingScorerTest {
         assertEquals(24, game.score());
     }
 
+    @Test
+    @DisplayName("B5 - dos strikes seguidos acumulan bien el bono del primero")
+    void twoConsecutiveStrikes_accumulateBonusCorrectly() {
+        BowlingGame game = new BowlingGame();
+        game.roll(10);
+        game.roll(10);
+        game.roll(5);
+        game.roll(0);
+        rollMany(game, 14, 0);
+
+        assertEquals(45, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
