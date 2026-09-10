@@ -18,6 +18,19 @@ public class BowlingScorer {
     }
 
     private int frameScore(List<Frame> frames, int index) {
-        return frames.get(index).pinsKnockedDown();
+        Frame frame = frames.get(index);
+        if (frame.isSpare()) {
+            return Frame.MAX_PINS + firstRollOfNextFrame(frames, index);
+        }
+        return frame.pinsKnockedDown();
+    }
+
+    private int firstRollOfNextFrame(List<Frame> frames, int index) {
+        int next = index + 1;
+        if (next >= frames.size()) {
+            return 0;
+        }
+        List<Integer> rolls = frames.get(next).getRolls();
+        return rolls.isEmpty() ? 0 : rolls.get(0);
     }
 }
