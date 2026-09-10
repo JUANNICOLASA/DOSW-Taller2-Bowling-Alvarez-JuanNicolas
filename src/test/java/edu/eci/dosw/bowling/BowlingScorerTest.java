@@ -69,6 +69,15 @@ class BowlingScorerTest {
         assertEquals(45, game.score());
     }
 
+    @Test
+    @DisplayName("B6 - todos spares con un tiro final de 5 puntua 150")
+    void allSparesWithFiveBonus_scores150() {
+        BowlingGame game = new BowlingGame();
+        rollAllSpares(game, 5);
+
+        assertEquals(150, game.score());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
