@@ -87,6 +87,15 @@ class BowlingScorerTest {
         assertEquals(300, game.score());
     }
 
+    @Test
+    @DisplayName("B8 - score() antes de terminar el juego lanza IllegalStateException")
+    void scoreBeforeGameIsComplete_throwsIllegalStateException() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 10, 4);
+
+        assertThrows(IllegalStateException.class, game::score);
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
