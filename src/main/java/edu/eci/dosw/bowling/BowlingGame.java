@@ -5,7 +5,10 @@ import java.util.List;
 
 /**
  * Motor de un juego de Bowling para un jugador.
- * Un juego tiene exactamente 10 frames.
+ *
+ * <p>Un juego tiene exactamente 10 frames. La clase es responsable del estado
+ * del juego (que tiros son validos y cuando termina); el calculo del puntaje
+ * lo delega en {@link BowlingScorer}.</p>
  */
 public class BowlingGame {
 
@@ -22,17 +25,19 @@ public class BowlingGame {
         this.currentFrame = 0;
     }
 
-    /** Registra pinos derribados. Valida rango, capacidad del frame y fin del juego. */
+    /**
+     * Registra los pinos derribados en un tiro.
+     *
+     * @param pins pinos derribados, entre 0 y 10.
+     * @throws IllegalArgumentException si los pinos estan fuera de rango
+     *         o superan los que quedaban en pie en el frame.
+     * @throws IllegalStateException si el juego ya termino.
+     */
     public void roll(int pins) {
         validatePinRange(pins);
-        if (isComplete()) {
-            throw new IllegalStateException("El juego ya termino: no se admiten mas tiros");
-        }
+        validateGameIsOpen();
         Frame frame = currentFrameOrCreate();
-        if (frame.wouldExceedPins(pins)) {
-            throw new IllegalArgumentException(
-                    "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
-        }
+        validateFrameCapacity(frame, pins);
         frame.addRoll(pins);
         advanceIfClosed(frame);
     }
@@ -41,6 +46,19 @@ public class BowlingGame {
         if (pins < 0 || pins > Frame.MAX_PINS) {
             throw new IllegalArgumentException(
                     "El numero de pinos debe estar entre 0 y " + Frame.MAX_PINS + ", pero fue: " + pins);
+        }
+    }
+
+    private void validateGameIsOpen() {
+        if (isComplete()) {
+            throw new IllegalStateException("El juego ya termino: no se admiten mas tiros");
+        }
+    }
+
+    private void validateFrameCapacity(Frame frame, int pins) {
+        if (frame.wouldExceedPins(pins)) {
+            throw new IllegalArgumentException(
+                    "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
         }
     }
 
