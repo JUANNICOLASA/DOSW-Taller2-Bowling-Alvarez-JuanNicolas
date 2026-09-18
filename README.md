@@ -1,15 +1,15 @@
-# Bowling TDD — DOSW Taller #1 (Corte 2)
+# Bowling TDD — DOSW Taller 2
 
-Motor de puntuación de Bowling para BowlTech S.A.S., construido desde cero
-aplicando **Test-Driven Development** con JUnit 5, JaCoCo y SonarQube.
+Motor de puntuación de bowling construido desde cero con Test-Driven Development,
+usando JUnit 5, JaCoCo y SonarQube.
 
 | | |
 |---|---|
-| **Asignatura** | DOSW — Desarrollo y Operaciones de Software |
-| **Periodo** | 2026-2 |
-| **Profesor** | Andrés Martín Cantor Urrego |
-| **Java** | 24 |
-| **Build** | Maven (`edu.eci.dosw:bowling-tdd:1.0-SNAPSHOT`) |
+| Asignatura | DOSW |
+| Periodo | 2026-2 |
+| Profesor | Andrés Martín Cantor Urrego |
+| Java | 24 |
+| Proyecto Maven | `edu.eci.dosw:bowling-tdd:1.0-SNAPSHOT` |
 
 ---
 
@@ -17,38 +17,38 @@ aplicando **Test-Driven Development** con JUnit 5, JaCoCo y SonarQube.
 
 | Campo | Valor |
 |---|---|
-| Nombre completo | Juan Nicolás Álvarez Muñoz |
-| Código estudiantil | `<!-- COMPLETAR: tu código -->` |
-| Correo institucional | `<!-- COMPLETAR: juan.alvarez-m@mail.escuelaing.edu.co -->` |
-| Repositorio | `<!-- COMPLETAR: https://github.com/<usuario>/DOSW-Taller2-Bowling-Alvarez-JuanNicolas -->` |
+| Nombre | Juan Nicolás Álvarez Muñoz |
+| Código | 1000102233 |
+| Correo | juan.amunoz@mail.escuelaing.edu.co |
+| Repositorio | `<!-- COMPLETAR: URL de GitHub -->` |
 
 ---
 
 ## 2. Descripción
 
-**BowlTech S.A.S.** administra pistas de bolos y hasta ahora llevaba la
-puntuación a mano, con los errores típicos: bonos de strike que se olvidan,
-spares que se confunden y juegos perfectos mal sumados. Este proyecto
-reemplaza ese proceso manual por un motor de puntuación probado.
+BowlTech S.A.S. administra pistas de bolos y llevaba la puntuación a mano. Con
+ese método se olvidaban los bonos de strike, se confundían los spares y el
+juego perfecto quedaba mal sumado. Este proyecto reemplaza ese proceso por un
+motor de puntuación probado.
 
-### Reglas del dominio implementadas
+### Reglas implementadas
 
 | Situación | Condición | Puntuación |
 |---|---|---|
 | Tiro normal | Derriba algunos pinos sin completar 10 | Solo los pinos de ese tiro |
-| Spare `/` | Derriba los 10 pinos en 2 intentos del mismo frame | 10 + primer tiro del frame siguiente |
-| Strike `X` | Derriba los 10 pinos en el primer intento | 10 + los dos tiros siguientes |
-| Frame 10 | Si cierra en strike o en spare | Hasta 3 tiros, con los pinos reiniciados |
-| Juego perfecto | 12 strikes consecutivos | 300 puntos |
+| Spare | Derriba los 10 pinos en 2 intentos del mismo frame | 10 más el primer tiro del frame siguiente |
+| Strike | Derriba los 10 pinos en el primer intento | 10 más los dos tiros siguientes |
+| Frame 10 | Cierra en strike o en spare | Hasta 3 tiros, con los pinos reiniciados |
+| Juego perfecto | 12 strikes seguidos | 300 puntos |
 
 ### Responsabilidades de cada clase
 
-| Clase | Responsabilidad |
+| Clase | Qué hace |
 |---|---|
-| `BowlingGame` | **Estado del juego.** Valida cada tiro (rango 0–10, capacidad del frame, juego terminado), decide cuándo avanza de frame y cuándo el juego está completo. Delega el cálculo del puntaje. |
-| `Frame` | **Reglas de un frame.** Sabe cuántos pinos quedan en pie (`standingPins`), cuándo queda cerrado (`isComplete`) y si terminó en strike o spare. Encapsula las reglas propias del frame 10. |
-| `BowlingScorer` | **Cálculo del puntaje.** Clase sin estado: recibe la lista de frames y devuelve un número, aplicando el bono de spare (1 tiro) o de strike (2 tiros). El frame 10 ya contiene sus propios tiros de bono, así que puntúa la suma directa. |
-| `FrameStatus` | Enum del dominio: `OPEN`, `SPARE`, `STRIKE`. |
+| `BowlingGame` | Controla el estado del juego. Valida cada tiro (rango 0 a 10, capacidad del frame, juego terminado), decide cuándo avanza de frame y cuándo termina el juego. No calcula el puntaje. |
+| `Frame` | Guarda los tiros de un frame y sabe cuántos pinos quedan en pie, cuándo queda cerrado y si terminó en strike o en spare. Aquí están las reglas propias del frame 10. |
+| `BowlingScorer` | Recibe la lista de frames y devuelve el puntaje total. No guarda estado. Aplica el bono de spare (1 tiro) y el de strike (2 tiros). |
+| `FrameStatus` | Enum con los tres estados: `OPEN`, `SPARE`, `STRIKE`. |
 
 ### Estructura
 
@@ -56,83 +56,81 @@ reemplaza ese proceso manual por un motor de puntuación probado.
 bowling-tdd/
 ├── pom.xml
 ├── README.md
-├── docs/
-│   ├── GUIA_INTELLIJ.md              guía paso a paso del taller
-│   └── evidence/
-│       ├── bitacora-ciclos-tdd.md    los 49 pasos del ciclo TDD
-│       └── (capturas de consola, JaCoCo y SonarQube)
+├── docs/evidence/            capturas y bitácora de los ciclos TDD
 ├── src/main/java/edu/eci/dosw/bowling/
 │   ├── BowlingGame.java
 │   ├── BowlingScorer.java
 │   ├── Frame.java
 │   └── FrameStatus.java
 └── src/test/java/edu/eci/dosw/bowling/
-    ├── BowlingGameTest.java          módulos A (roll) y C (isComplete)
-    └── BowlingScorerTest.java        módulo B (calculate)
+    ├── BowlingGameTest.java      módulos A y C
+    └── BowlingScorerTest.java    módulo B
 ```
 
 ### Casos de prueba
 
-**Módulo A — `BowlingGame.roll()`** (8 casos)
+Módulo A, `BowlingGame.roll()`:
 
 | # | Caso | Resultado |
 |---|---|---|
-| A1 | `roll(0)` | No lanza; el frame registra 0 pinos |
+| A1 | `roll(0)` | No lanza excepción; el frame registra 0 pinos |
 | A2 | `roll(-1)` | `IllegalArgumentException` |
 | A3 | `roll(11)` | `IllegalArgumentException` |
-| A4 | `roll(7)` + `roll(6)` | `IllegalArgumentException` en el segundo tiro |
+| A4 | `roll(7)` y luego `roll(6)` | `IllegalArgumentException` en el segundo tiro |
 | A5 | `roll()` con el juego terminado | `IllegalStateException` |
-| A6 | `roll(10)` | Frame marcado `STRIKE`; avanza de frame |
-| A7 | `roll(5)` + `roll(5)` | Frame marcado `SPARE` |
+| A6 | `roll(10)` | El frame queda `STRIKE` y avanza al siguiente |
+| A7 | `roll(5)` y `roll(5)` | El frame queda `SPARE` |
 | A8 | Frame 10 con strike | Acepta 3 tiros sin excepción |
 
-**Módulo B — `BowlingScorer.calculate()`** (8 casos)
+Módulo B, `BowlingScorer.calculate()`:
 
 | # | Caso | Resultado |
 |---|---|---|
-| B1 | Todos los tiros en 0 | `0` |
-| B2 | Sin strikes ni spares (20 × 4) | `80` |
-| B3 | Spare en frame 1, luego 3 | Frame 1 puntúa `13`; total `16` |
-| B4 | Strike en frame 1, luego 4 y 3 | Frame 1 puntúa `17`; total `24` |
-| B5 | Dos strikes seguidos, luego 5 | Total `45` |
-| B6 | Todos spares + último tiro 5 | `150` |
-| B7 | Juego perfecto (12 strikes) | `300` |
+| B1 | Todos los tiros en 0 | 0 |
+| B2 | Sin strikes ni spares (20 tiros de 4) | 80 |
+| B3 | Spare en el frame 1 y luego un 3 | El frame 1 puntúa 13; total 16 |
+| B4 | Strike en el frame 1 y luego 4 y 3 | El frame 1 puntúa 17; total 24 |
+| B5 | Dos strikes seguidos y luego un 5 | 45 |
+| B6 | Todos spares con último tiro de 5 | 150 |
+| B7 | Juego perfecto, 12 strikes | 300 |
 | B8 | `score()` con el juego incompleto | `IllegalStateException` |
 
-**Módulo C — `BowlingGame.isComplete()`** (6 casos)
+Módulo C, `BowlingGame.isComplete()`:
 
 | # | Caso | Resultado |
 |---|---|---|
 | C1 | Al iniciar | `false` |
-| C2 | Tras 9 frames completos | `false` |
-| C3 | 10 frames normales | `true` |
-| C4 | Spare en frame 10 + tiro bonus | `true` (y `false` antes del bonus) |
-| C5 | Strike en frame 10 + 2 bonus | `true` |
+| C2 | Con 9 frames completos | `false` |
+| C3 | Con 10 frames normales | `true` |
+| C4 | Spare en el frame 10 más el tiro de bono | `true`, y `false` antes del bono |
+| C5 | Strike en el frame 10 más 2 tiros de bono | `true` |
 | C6 | Juego perfecto | `true` |
 
-Más 5 pruebas de borde añadidas al revisar el reporte de cobertura (ver §7, pregunta 03).
-**Total: 29 pruebas.**
+A estos 22 casos se sumaron 5 pruebas de borde que salieron de revisar el
+reporte de cobertura. **Total: 29 pruebas.**
 
 ---
 
 ## 3. Evidencia TDD
 
-El historial de commits es la evidencia principal: **49 commits** en la rama
-`feature/AlvarezJuanNicolas_bowling`, uno por cada fase de cada caso
-(17 fases RED, 32 fases GREEN/REFACTOR). La bitácora completa está en
+La evidencia principal es el historial de commits: 49 commits en la rama
+`feature/AlvarezJuanNicolas_bowling`, uno por cada fase de cada caso. Son 17
+fases RED y 32 fases GREEN o REFACTOR. La lista completa está en
 [`docs/evidence/bitacora-ciclos-tdd.md`](docs/evidence/bitacora-ciclos-tdd.md).
 
 ```bash
 git log --oneline --graph --all
 ```
 
-![Historial de commits: ciclo RED → GREEN → REFACTOR y merges de los Pull Requests](docs/evidence/historial-tdd.png)
+![Historial de commits con el ciclo RED, GREEN y REFACTOR y los merges de los Pull Requests](docs/evidence/historial-tdd.png)
 
-### Ciclo documentado: caso A4 — dos tiros de un frame no pueden superar 10 pinos
+### Ciclo documentado: caso A4
 
-#### 🔴 RED — `c03f023` · `test: RED - A4 dos tiros de un frame no pueden superar 10 pinos`
+El caso A4 verifica que dos tiros del mismo frame no puedan sumar más de 10 pinos.
 
-Se escribió primero la prueba:
+**RED — commit `c03f023`**
+
+Primero escribí la prueba:
 
 ```java
 @Test
@@ -145,21 +143,21 @@ void twoRollsExceedingTenPins_throwsIllegalArgumentException() {
 }
 ```
 
-En ese commit `roll()` solo validaba el rango 0–10, así que `roll(6)` se
-aceptaba y la prueba falló:
+En ese punto `roll()` solo validaba el rango de 0 a 10, así que aceptaba el
+segundo tiro y la prueba falló:
 
 ```
 [ERROR] BowlingGameTest.twoRollsExceedingTenPins_throwsIllegalArgumentException
   Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
-[ERROR] Tests run: 4, Failures: 1, Errors: 0, Skipped: 0
+[ERROR] Tests run: 4, Failures: 1
 [INFO] BUILD FAILURE
 ```
 
-![Fase RED del caso A4: la prueba existe y falla porque el código aún no valida la capacidad del frame](docs/evidence/a4-red.png)
+![Prueba del caso A4 fallando antes de escribir el código](docs/evidence/a4-red.png)
 
-#### 🟢 GREEN — `b4a6064` · `feat: GREEN - A4 valida la capacidad de pinos del frame`
+**GREEN — commit `b4a6064`**
 
-Código mínimo para pasar, sin anticipar nada:
+Escribí solo lo necesario para que pasara, sin adelantar nada:
 
 ```java
 Frame frame = currentFrameOrCreate();
@@ -174,18 +172,13 @@ if (alreadyDown + pins > MAX_PINS) {
 frame.addRoll(pins);
 ```
 
-```
-[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
-[INFO] BUILD SUCCESS
-```
+![Las mismas cuatro pruebas pasando con el código mínimo](docs/evidence/a4-green.png)
 
-![Fase GREEN del caso A4: las mismas 4 pruebas pasan con el código mínimo](docs/evidence/a4-green.png)
+**REFACTOR — commit `46dfb45`**
 
-#### 🔵 REFACTOR — `46dfb45` · `refactor: mueve la regla de capacidad de pinos a Frame`
-
-Contar pinos no es responsabilidad de `BowlingGame`: el frame sabe cuántos
-pinos tiene en pie. La lógica se movió a `Frame` sin cambiar el
-comportamiento observable, y las 4 pruebas siguieron pasando.
+Contar pinos no es tarea de `BowlingGame`: el frame es quien sabe cuántos pinos
+tiene en pie. Moví la lógica a `Frame` sin cambiar el comportamiento, y las 4
+pruebas siguieron pasando.
 
 ```java
 // BowlingGame
@@ -201,24 +194,24 @@ public boolean wouldExceedPins(int pins) {
 }
 ```
 
-Esta extracción fue la que después hizo posible encapsular la regla del
-frame 10 (`standingPins()`, commit `8668fc1`) sin tocar `BowlingGame`.
+Este cambio fue el que después permitió meter la regla del frame 10 dentro de
+`Frame` sin tocar `BowlingGame`.
 
-### Cómo reproducir cualquier fase RED
+### Cómo reproducir cualquier fase
 
 ```bash
-git checkout c03f023      # commit RED del caso A4
-mvn test                  # BUILD FAILURE  <- la captura roja
+git checkout c03f023      # commit RED
+mvn test                  # BUILD FAILURE
 git checkout b4a6064      # commit GREEN
-mvn test                  # BUILD SUCCESS  <- la captura verde
+mvn test                  # BUILD SUCCESS
 git checkout feature/AlvarezJuanNicolas_bowling
 ```
 
 ---
 
-## 4. JaCoCo — cobertura de código
+## 4. Cobertura con JaCoCo
 
-Umbrales configurados en el `pom.xml` (no se bajaron):
+Umbrales configurados en el `pom.xml`, sin modificar:
 
 | Contador | Mínimo |
 |---|---|
@@ -227,180 +220,208 @@ Umbrales configurados en el `pom.xml` (no se bajaron):
 
 ```bash
 mvn clean verify
-# reporte HTML: target/site/jacoco/index.html
+# reporte HTML en target/site/jacoco/index.html
 ```
-
-Resultado medido con JaCoCo 0.8.15 sobre el bundle `Bowling TDD`:
 
 | Momento | Instrucciones | Ramas | Líneas | Métodos |
 |---|---|---|---|---|
-| Antes de las pruebas de borde (`bc78fc3`) | 95 % (20 de 478 sin cubrir) | 92 % (6 de 82) | 96 / 100 | 30 / 31 |
-| Después de las pruebas de borde (`3cae355`) | **100 %** (0 de 478) | **97 %** (2 de 82) | **100 / 100** | **31 / 31** |
+| Antes de las pruebas de borde (`bc78fc3`) | 95 % | 92 % | 96 de 100 | 30 de 31 |
+| Después de las pruebas de borde (`3cae355`) | 100 % | 97 % | 100 de 100 | 31 de 31 |
 
-Los dos momentos superan los umbrales del `pom.xml`. Las cinco pruebas de borde
-cerraron las 4 líneas y el método que quedaban sin ejercitar, y subieron la
-cobertura de ramas de 92 % a 97 %.
+Los dos momentos pasan el umbral. Las 5 pruebas de borde cerraron las 4 líneas
+y el método que faltaban, y subieron la cobertura de ramas de 92 % a 97 %.
 
-**Antes** — commit `bc78fc3`
+Antes, commit `bc78fc3`:
 
-![Reporte de JaCoCo antes de las pruebas de borde: 95 % de instrucciones y 92 % de ramas](docs/evidence/jacoco-antes.png)
+![Reporte de JaCoCo con 95 % de instrucciones y 92 % de ramas](docs/evidence/jacoco-antes.png)
 
-**Después** — commit `3cae355`
+Después, commit `3cae355`:
 
-![Reporte de JaCoCo después de las pruebas de borde: 100 % de instrucciones y 97 % de ramas](docs/evidence/jacoco-despues.png)
+![Reporte de JaCoCo con 100 % de instrucciones y 97 % de ramas](docs/evidence/jacoco-despues.png)
 
 ### Qué pruebas subieron la cobertura
 
 Las 22 pruebas de los módulos A, B y C cubren el flujo principal. El reporte
-de JaCoCo mostró cuatro huecos que ninguna de ellas tocaba, y para cada uno se
-añadió una prueba en el commit `3cae355`:
+mostró cuatro huecos que ninguna de ellas tocaba, y añadí una prueba para cada uno:
 
-| Hueco detectado en el reporte | Prueba añadida |
+| Hueco en el reporte | Prueba añadida |
 |---|---|
-| `Frame.standingPins()` — rama del frame 10 con strike seguido de un tiro parcial (los pinos **no** se reinician una segunda vez) | `tenthFrameAfterStrike_validatesRemainingPins` |
-| `Frame.getNumber()` / `isLastFrame()` — nunca se consultaban directamente | `frames_areNumberedFromOneToTen` |
-| `BowlingGame.getFrames()` — no se verificaba que la copia fuera inmutable | `getFrames_returnsImmutableCopy` |
-| `Frame.getStatus()` — la rama `return FrameStatus.OPEN` no se ejecutaba nunca | `frameWithStandingPins_isOpen` |
-| `BowlingScorer.calculate(null)` — guarda del contrato sin ejercitar | `calculateWithNullFrames_throwsIllegalArgumentException` |
+| `Frame.standingPins()`, la rama del frame 10 con strike seguido de un tiro parcial, donde los pinos no se reinician otra vez | `tenthFrameAfterStrike_validatesRemainingPins` |
+| `Frame.getNumber()` e `isLastFrame()`, que nunca se consultaban directamente | `frames_areNumberedFromOneToTen` |
+| `BowlingGame.getFrames()`, sin verificar que la copia fuera inmutable | `getFrames_returnsImmutableCopy` |
+| `Frame.getStatus()`, la rama que devuelve `OPEN` | `frameWithStandingPins_isOpen` |
+| `BowlingScorer.calculate(null)`, la validación que nunca se ejecutaba | `calculateWithNullFrames_throwsIllegalArgumentException` |
 
 ---
 
-## 5. SonarQube — análisis estático
+## 5. Análisis con SonarQube
+
+Servidor levantado con Docker:
 
 ```bash
 docker pull sonarqube:26.9.0.129388-community
 docker run -d --name sonarqube -p 9000:9000 sonarqube:26.9.0.129388-community
-# http://localhost:9000  (admin / admin)
 ```
 
-```bash
-# Linux / macOS
-export SONAR_TOKEN="TU_TOKEN_AQUI"
-mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
+Análisis:
 
+```bash
 # Windows PowerShell
-$env:SONAR_TOKEN="TU_TOKEN_AQUI"
+$env:SONAR_TOKEN="TU_TOKEN"
 mvn clean verify sonar:sonar "-Dsonar.token=$env:SONAR_TOKEN"
 ```
 
-> El token **no** está en el repositorio: se pasa por variable de entorno.
-> `.sonarqube/`, `.scannerwork/` y `sonar-project.properties` están en `.gitignore`.
+El token se pasa por variable de entorno y no queda en el repositorio.
+`.sonarqube/`, `.scannerwork/` y `sonar-project.properties` están en el `.gitignore`.
+
+### Resultados
 
 | Métrica | Valor |
 |---|---|
-| Quality Gate | `<!-- COMPLETAR: Passed / Failed -->` |
-| Coverage | `<!-- COMPLETAR -->` |
-| Bugs | `<!-- COMPLETAR -->` |
-| Code Smells | `<!-- COMPLETAR -->` |
-| Security Hotspots | `<!-- COMPLETAR -->` |
-| Duplications | `<!-- COMPLETAR -->` |
+| Quality Gate | Passed |
+| Security | A, 0 issues |
+| Reliability | A, 0 issues |
+| Maintainability | A, 0 issues |
+| Security Hotspots | 0 |
+| Coverage | 98.9 % sobre 100 líneas |
+| Duplications | 0.0 % sobre 416 líneas |
+| Lines of Code | 281 |
 
-`<!-- CAPTURA: docs/evidence/sonarqube-dashboard.png -->`
+![Quality Gate en estado Passed](docs/evidence/sonarqube-quality-gate.png)
 
-### Issues corregidos
+![Dashboard de SonarQube con calificación A en las tres dimensiones](docs/evidence/sonarqube-dashboard.png)
 
-| Issue | Regla | Corrección |
-|---|---|---|
-| `<!-- COMPLETAR tras ejecutar el análisis -->` | | |
+La cobertura que reporta Sonar (98.9 %) no contradice la de JaCoCo (100 % de
+líneas). Sonar junta en una sola cifra la cobertura de líneas y la de
+condiciones, así que las 2 ramas que JaCoCo marca sin cubrir le bajan una décima.
+
+### Issues encontrados
+
+El análisis no reportó ningún issue. La vista de Issues con el filtro en *All*
+muestra 0 issues y 0 effort, y no hubo Security Hotspots que revisar.
+
+![Página de Issues de SonarQube sin ningún hallazgo](docs/evidence/sonarqube-issues.png)
+
+![Sin Security Hotspots para revisar](docs/evidence/sonarqube-hotspots.png)
+
+Al no haber hallazgos no hubo correcciones que hacer. En la pregunta 04 explico
+a qué lo atribuyo.
 
 ---
 
 ## 6. Pull Requests
 
-Los cambios llegaron a `develop` únicamente por Pull Request: no hay commits
-directos sobre `develop` ni sobre `main`.
+Los cambios llegaron a `develop` solo por Pull Request. No hay commits directos
+sobre `develop` ni sobre `main`.
 
-| PR | Módulo que cubre | Commits | Merge | Enlace |
+| PR | Módulo | Commits | Fecha de merge | Enlace |
 |---|---|---|---|---|
-| #1 | Módulo A — validaciones y estado de `roll()` (A1–A8) | 21 | `<!-- fecha -->` | `<!-- COMPLETAR -->` |
-| #2 | Módulo C — reglas de cierre del juego (C1–C6) | 8 | `<!-- fecha -->` | `<!-- COMPLETAR -->` |
-| #3 | Módulo B — cálculo de puntaje con bonos (B1–B8) | 20 | `<!-- fecha -->` | `<!-- COMPLETAR -->` |
-| #4 | Documentación y evidencias | 1 | `<!-- fecha -->` | `<!-- COMPLETAR -->` |
+| #1 | Módulo A, validaciones y estado de `roll()` | 21 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
+| #2 | Módulo C, reglas de cierre del juego | 8 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
+| #3 | Módulo B, cálculo de puntaje con bonos | 20 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
+| #4 | Documentación y evidencias | 1 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
 
 ```bash
-git log --oneline --graph develop    # los merge commits --no-ff de cada PR
+git log --oneline --graph develop
 ```
 
 ---
 
-## 7. Reflexión técnica
+## 7. Reflexión
 
-### 01 · ¿Qué caso edge del Bowling fue el más difícil de implementar con TDD y por qué?
+### 01. ¿Qué caso edge del bowling fue el más difícil de implementar con TDD y por qué?
 
-El frame 10. Es el único frame donde las dos reglas que el resto del juego da
-por sentadas dejan de valerse: *un frame tiene dos tiros* y *entre los dos
-tiros no pueden caer más de 10 pinos*. En el frame 10, un strike o un spare
-otorgan un tercer tiro **y** levantan los pinos de nuevo, así que la
-validación de capacidad tiene que preguntarse cuántos pinos hay realmente en
-pie en ese momento — que no es lo mismo que `10 − pinos derribados en el frame`.
+El frame 10. Es el único donde dejan de valer las dos reglas que el resto del
+juego da por sentadas: que un frame tiene dos tiros, y que entre esos dos tiros
+no pueden caer más de 10 pinos. En el frame 10 un strike o un spare dan un
+tercer tiro y además levantan los pinos otra vez, así que la validación tiene
+que preguntarse cuántos pinos hay realmente en pie en ese momento, que no es lo
+mismo que restar los pinos ya derribados en el frame.
 
-Lo difícil con TDD fue que el caso A8 solo pedía el frame 10 **con strike**, y
-el código mínimo para pasarlo (`isStrike() ? 3 tiros : 2`) dejó una regla a
-medias. El caso C4 (spare en el frame 10) fue el que la destapó: `isComplete()`
-daba `true` con dos tiros y el tiro de bono terminaba lanzando
-`IllegalStateException`. Ese RED fue el más valioso del taller, porque forzó a
-darle un nombre propio a la regla en vez de ir parchando condicionales:
-`expectedRolls()` y `pinsWereReset()` en `Frame`.
+Lo difícil con TDD fue que el caso A8 solo pedía el frame 10 con strike, y el
+código mínimo para pasarlo dejó la regla a medias. El caso C4, el spare en el
+frame 10, fue el que destapó el problema: `isComplete()` daba `true` con dos
+tiros y el tiro de bono terminaba lanzando `IllegalStateException`. Ese fue el
+RED más útil del taller, porque me obligó a darle un nombre propio a la regla en
+vez de seguir agregando condicionales: `expectedRolls()` y `pinsWereReset()`.
 
-### 02 · ¿Qué parte del código cambió durante REFACTOR sin modificar el comportamiento observable?
+### 02. ¿Qué parte del código cambió durante REFACTOR sin modificar el comportamiento observable?
 
-Tres refactors con impacto real, todos con las pruebas en verde antes y después:
+Hubo tres refactors con efecto real, los tres con las pruebas en verde antes y después.
 
-1. **`46dfb45` — la capacidad de pinos se movió de `BowlingGame` a `Frame`.**
-   `BowlingGame` sumaba a mano los pinos del frame en curso. Pasó a
-   `frame.wouldExceedPins(pins)`. Sin ese movimiento, la regla del frame 10
-   habría quedado como una cadena de `if` dentro de `roll()`.
-2. **`dd75bd6` — `expectedRolls()` y `pinsWereReset()` en `Frame`.**
-   `isComplete()` y `standingPins()` tenían condicionales anidados que mezclaban
-   "cuántos tiros faltan" con "cuántos pinos hay en pie". Separarlos en dos
-   métodos privados con nombre dejó el frame 10 legible.
-3. **`bc78fc3` — `roll()` quedó como una lista de reglas.**
-   El cuerpo pasó a ser `validatePinRange` → `validateGameIsOpen` →
-   `currentFrameOrCreate` → `validateFrameCapacity` → `addRoll` →
-   `advanceIfClosed`. El método se lee como el enunciado del taller.
+El primero, commit `46dfb45`, movió la validación de capacidad de pinos de
+`BowlingGame` a `Frame`. Antes `BowlingGame` sumaba a mano los pinos del frame
+en curso; después pasó a preguntar `frame.wouldExceedPins(pins)`. Sin ese
+cambio, la regla del frame 10 habría terminado como una cadena de `if` dentro
+de `roll()`.
 
-Ninguno cambió una firma pública ni un mensaje de excepción: el comportamiento
-observable por las pruebas quedó idéntico.
+El segundo, commit `dd75bd6`, separó en `Frame` los métodos `expectedRolls()` y
+`pinsWereReset()`. `isComplete()` y `standingPins()` tenían condicionales
+anidados que mezclaban dos preguntas distintas: cuántos tiros faltan y cuántos
+pinos hay en pie. Separarlas dejó el frame 10 legible.
 
-### 03 · ¿Qué casos de prueba descubriste al revisar el reporte de cobertura de JaCoCo que no habías considerado antes?
+El tercero, commit `bc78fc3`, dejó `roll()` como una lista de pasos con nombre:
+`validatePinRange`, `validateGameIsOpen`, `currentFrameOrCreate`,
+`validateFrameCapacity`, `addRoll` y `advanceIfClosed`.
 
-Cinco, todos en el commit `3cae355`:
+Ninguno cambió una firma pública ni un mensaje de excepción, así que las pruebas
+no notaron la diferencia.
 
-- **Frame 10 con strike y luego un tiro parcial.** Las pruebas cubrían
-  `10,10,10` (juego perfecto) y `10,10,x`, pero nunca `10,7,…`. Esa es
-  justamente la rama donde los pinos **no** se reinician, y estaba sin
-  ejecutar: con `10,7` solo quedan 3 pinos en pie y un `roll(5)` debe fallar.
-- **`Frame.getStatus()` devolviendo `OPEN`.** Las pruebas A6 y A7 consultaban
-  el estado de frames en strike y en spare; ningún test preguntaba el estado de
-  un frame normal, así que esa línea nunca se ejecutaba.
-- **La numeración de los frames.** `getNumber()` e `isLastFrame()` se usaban
-  internamente pero ninguna prueba verificaba que los frames fueran 1…10.
-- **La inmutabilidad de `getFrames()`.** El método devuelve `List.copyOf`, pero
-  nada comprobaba que un cliente no pudiera modificar el juego por fuera.
-- **`BowlingScorer.calculate(null)`.** La guarda del contrato estaba escrita y
-  nunca se ejercitaba.
+### 03. ¿Qué casos de prueba descubriste al revisar el reporte de cobertura de JaCoCo que no habías considerado antes?
 
-La lección: el reporte de cobertura no señala pruebas que falten "en general",
-señala **decisiones del código que nadie tomó nunca** durante las pruebas. Las
-cuatro primeras son ramas de reglas del dominio, no adornos.
+Cinco, todos agregados en el commit `3cae355`.
 
-### 04 · ¿Qué hallazgo de SonarQube produjo un cambio real en el código?
+El primero fue el frame 10 con strike seguido de un tiro parcial. Las pruebas
+cubrían `10, 10, 10` y el juego perfecto, pero nunca algo como `10, 7, ...`. Esa
+es justamente la rama donde los pinos no se reinician: después de un 10 y un 7
+solo quedan 3 pinos en pie, así que un `roll(5)` debe fallar.
 
-`<!-- COMPLETAR tras ejecutar el análisis. Candidatos esperados en este código: -->`
-`<!-- - java:S109 "Magic Number" en los tests (18, 20, 300…) -->`
-`<!-- - java:S5960 aserciones sin mensaje -->`
-`<!-- - java:S3776 complejidad cognitiva si un condicional del frame 10 quedó anidado -->`
-`<!-- - java:S1192 cadenas de texto duplicadas en los mensajes de excepción -->`
-`<!-- Describe el hallazgo, la regla, y el diff que hiciste para resolverlo. -->`
+El segundo fue `getStatus()` devolviendo `OPEN`. Las pruebas A6 y A7 consultaban
+el estado de frames en strike y en spare, pero ninguna preguntaba por un frame
+normal, así que esa línea no se ejecutaba nunca.
+
+Los otros tres fueron la numeración de los frames, la inmutabilidad de la lista
+que devuelve `getFrames()` y la validación de lista nula en `calculate()`.
+
+Lo que saqué de esto es que el reporte de cobertura no señala pruebas que
+falten en general, sino decisiones del código que nadie tomó durante las
+pruebas. Los dos primeros casos son reglas del dominio, no detalles menores.
+
+### 04. ¿Qué hallazgo de SonarQube produjo un cambio real en el código?
+
+Ninguno. El análisis cerró con 0 issues en las tres dimensiones y 0 Security
+Hotspots, así que no hubo nada que corregir.
+
+Revisando el perfil `java/Sonar way`, las reglas que suelen aparecer en un
+ejercicio como este son tres, y en los tres casos el propio ciclo TDD ya las
+había evitado antes de correr el análisis.
+
+La primera es la de números mágicos. El 10 aparece muchas veces en las reglas
+del bowling, y quedó como `MAX_PINS`, `LAST_FRAME_NUMBER`, `REGULAR_ROLLS` y
+`LAST_FRAME_ROLLS` en el refactor `8668fc1`. No lo hice porque Sonar lo pidiera,
+sino porque sin esos nombres la regla del frame 10 no se entendía.
+
+La segunda es la de complejidad. El punto de riesgo era `roll()`, que acumula
+cuatro validaciones más el avance de frame. El refactor `bc78fc3` lo dejó como
+seis llamadas a métodos de dos o tres líneas cada uno.
+
+La tercera es la duplicación. Sonar reporta 0.0 % sobre 416 líneas. El cálculo
+de bonos estuvo duplicado entre dos métodos hasta el refactor `ff4fc09`, que los
+unificó en `sumOfNextRolls` y `rollsAfter`.
+
+La conclusión que saco es que con 281 líneas de código y seis refactors en el
+historial, SonarQube no tenía mucho que encontrar. Aquí funcionó como
+confirmación, no como descubrimiento, a diferencia de JaCoCo, que sí destapó
+cinco ramas sin probar. Supongo que su valor real aparece en proyectos más
+grandes, con más gente escribiendo y sin la costumbre de refactorizar en cada
+ciclo.
 
 ---
 
 ## 8. Cómo ejecutar
 
 ```bash
-mvn test                                        # 29 pruebas
-mvn clean verify                                # pruebas + JaCoCo (falla si line < 85%)
+mvn test              # 29 pruebas
+mvn clean verify      # pruebas más cobertura, falla si baja del 85 %
 mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
 ```
-
-Guía detallada paso a paso en IntelliJ IDEA: [`docs/GUIA_INTELLIJ.md`](docs/GUIA_INTELLIJ.md).
