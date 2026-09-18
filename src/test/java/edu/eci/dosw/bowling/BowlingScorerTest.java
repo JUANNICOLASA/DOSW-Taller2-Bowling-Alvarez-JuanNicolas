@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-/**
- * Modulo B - bonos de spare y de strike en {@link BowlingScorer#calculate(java.util.List)}.
- */
+// Modulo B: bonos de spare y de strike en el calculo del puntaje.
 @DisplayName("BowlingScorer - modulo B (calculate)")
 class BowlingScorerTest {
 
@@ -116,23 +114,18 @@ class BowlingScorerTest {
         assertEquals(71, game.score());
     }
 
-    // ------------------------------------------------------------- helpers
-
-    /** Juega N tiros iguales. */
     private void rollMany(BowlingGame game, int times, int pins) {
         for (int i = 0; i < times; i++) {
             game.roll(pins);
         }
     }
 
-    /** Juego perfecto: 12 strikes. */
     private void rollPerfectGame(BowlingGame game) {
         for (int i = 0; i < 12; i++) {
             game.roll(10);
         }
     }
 
-    /** Todos los frames en spare, con un tiro de bono final. */
     private void rollAllSpares(BowlingGame game, int lastBonus) {
         for (int i = 0; i < 10; i++) {
             game.roll(5);

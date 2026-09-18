@@ -3,16 +3,10 @@ package edu.eci.dosw.bowling;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Motor de un juego de Bowling para un jugador.
- *
- * <p>Un juego tiene exactamente 10 frames. La clase es responsable del estado
- * del juego (que tiros son validos y cuando termina); el calculo del puntaje
- * lo delega en {@link BowlingScorer}.</p>
- */
+// Motor de un juego de bowling para un jugador. Controla el estado del juego:
+// que tiros son validos y cuando termina. El puntaje lo calcula BowlingScorer.
 public class BowlingGame {
 
-    /** Frames que tiene un juego completo. */
     public static final int TOTAL_FRAMES = 10;
 
     private final List<Frame> frames;
@@ -25,14 +19,6 @@ public class BowlingGame {
         this.currentFrame = 0;
     }
 
-    /**
-     * Registra los pinos derribados en un tiro.
-     *
-     * @param pins pinos derribados, entre 0 y 10.
-     * @throws IllegalArgumentException si los pinos estan fuera de rango
-     *         o superan los que quedaban en pie en el frame.
-     * @throws IllegalStateException si el juego ya termino.
-     */
     public void roll(int pins) {
         validatePinRange(pins);
         validateGameIsOpen();
@@ -40,6 +26,23 @@ public class BowlingGame {
         validateFrameCapacity(frame, pins);
         frame.addRoll(pins);
         advanceIfClosed(frame);
+    }
+
+    public int score() {
+        if (!isComplete()) {
+            throw new IllegalStateException(
+                    "El juego no esta completo: aun no se puede calcular el puntaje");
+        }
+        return scorer.calculate(frames);
+    }
+
+    public boolean isComplete() {
+        return frames.size() == TOTAL_FRAMES
+                && frames.get(TOTAL_FRAMES - 1).isComplete();
+    }
+
+    public List<Frame> getFrames() {
+        return List.copyOf(frames);
     }
 
     private void validatePinRange(int pins) {
@@ -74,21 +77,4 @@ public class BowlingGame {
             currentFrame++;
         }
     }
-
-    /** Puntaje total. Lanza IllegalStateException si el juego no esta completo. */
-    public int score() {
-        if (!isComplete()) {
-            throw new IllegalStateException(
-                    "El juego no esta completo: aun no se puede calcular el puntaje");
-        }
-        return scorer.calculate(frames);
-    }
-
-    /** true cuando los 10 frames han sido completados. */
-    public boolean isComplete() {
-        return frames.size() == TOTAL_FRAMES
-                && frames.get(TOTAL_FRAMES - 1).isComplete();
-    }
-
-    public List<Frame> getFrames() { return List.copyOf(frames); }
 }

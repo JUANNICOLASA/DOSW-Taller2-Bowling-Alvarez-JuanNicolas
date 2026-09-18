@@ -11,10 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * Modulo A - validaciones y estado de {@link BowlingGame#roll(int)}.
- * Modulo C - reglas de cierre de {@link BowlingGame#isComplete()}.
- */
+// Modulo A: validaciones y estado de roll().
+// Modulo C: reglas de cierre de isComplete().
 @DisplayName("BowlingGame - modulos A (roll) y C (isComplete)")
 class BowlingGameTest {
 
@@ -220,23 +218,18 @@ class BowlingGameTest {
         assertEquals(FrameStatus.OPEN, FrameStatus.valueOf("OPEN"));
     }
 
-    // ------------------------------------------------------------- helpers
-
-    /** Juega N tiros iguales. */
     private void rollMany(BowlingGame game, int times, int pins) {
         for (int i = 0; i < times; i++) {
             game.roll(pins);
         }
     }
 
-    /** Juego perfecto: 12 strikes. */
     private void rollPerfectGame(BowlingGame game) {
         for (int i = 0; i < 12; i++) {
             game.roll(10);
         }
     }
 
-    /** Ultimo frame registrado hasta el momento. */
     private Frame lastFrame(BowlingGame game) {
         List<Frame> frames = game.getFrames();
         return frames.get(frames.size() - 1);
