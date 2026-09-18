@@ -167,6 +167,59 @@ class BowlingGameTest {
         assertTrue(game.isComplete());
     }
 
+    @Test
+    @DisplayName("Borde - tras un strike en el frame 10 los pinos solo se reinician una vez")
+    void tenthFrameAfterStrike_validatesRemainingPins() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+        game.roll(10);
+        game.roll(7);
+
+        assertThrows(IllegalArgumentException.class, () -> game.roll(5));
+    }
+
+    @Test
+    @DisplayName("Borde - los frames se numeran de 1 a 10 y el ultimo se reconoce")
+    void frames_areNumberedFromOneToTen() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 20, 3);
+
+        List<Frame> frames = game.getFrames();
+        assertEquals(1, frames.get(0).getNumber());
+        assertFalse(frames.get(0).isLastFrame());
+        assertEquals(10, frames.get(9).getNumber());
+        assertTrue(frames.get(9).isLastFrame());
+    }
+
+    @Test
+    @DisplayName("Borde - getFrames() devuelve una copia inmutable")
+    void getFrames_returnsImmutableCopy() {
+        BowlingGame game = new BowlingGame();
+        game.roll(4);
+        List<Frame> frames = game.getFrames();
+        Frame extra = new Frame(2);
+
+        assertThrows(UnsupportedOperationException.class, () -> frames.add(extra));
+    }
+
+    @Test
+    @DisplayName("Borde - un frame que deja pinos en pie queda OPEN")
+    void frameWithStandingPins_isOpen() {
+        BowlingGame game = new BowlingGame();
+        game.roll(3);
+        game.roll(4);
+
+        assertEquals(FrameStatus.OPEN, game.getFrames().get(0).getStatus());
+    }
+
+    @Test
+    @DisplayName("Borde - FrameStatus expone los tres estados del dominio")
+    void frameStatus_hasThreeValues() {
+        assertEquals(3, FrameStatus.values().length);
+        assertEquals(FrameStatus.SPARE, FrameStatus.valueOf("SPARE"));
+        assertEquals(FrameStatus.OPEN, FrameStatus.valueOf("OPEN"));
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
