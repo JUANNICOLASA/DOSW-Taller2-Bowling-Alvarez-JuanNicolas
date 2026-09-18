@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Un frame de un juego de bowling. Conoce su numero, sus tiros,
- * cuantos pinos siguen en pie y cuando queda cerrado.
+ * Un frame de un juego de bowling.
+ *
+ * <p>Conoce su numero, los tiros que recibio, cuantos pinos siguen en pie
+ * y cuando queda cerrado. El frame 10 tiene reglas propias: si termina en
+ * strike o en spare gana un tercer tiro y los pinos se reinician.</p>
  */
 public class Frame {
 
@@ -59,21 +62,12 @@ public class Frame {
         return pins > standingPins();
     }
 
-    /** Pinos que siguen en pie justo antes del proximo tiro de este frame. */
-    private int standingPins() {
-        if (isLastFrame() && isStrike()) {
-            boolean pinsWereReset = rolls.size() == 1 || rolls.get(1) == MAX_PINS;
-            return pinsWereReset ? MAX_PINS : MAX_PINS - rolls.get(1);
-        }
-        return MAX_PINS - pinsKnockedDown();
-    }
-
     /** true cuando el frame ya no admite mas tiros. */
     public boolean isComplete() {
-        if (isLastFrame()) {
-            return isStrike() ? rolls.size() == LAST_FRAME_ROLLS : rolls.size() == REGULAR_ROLLS;
+        if (isStrike() && !isLastFrame()) {
+            return true;
         }
-        return isStrike() || rolls.size() == REGULAR_ROLLS;
+        return rolls.size() == expectedRolls();
     }
 
     /** true si el primer tiro derribo los 10 pinos. */
@@ -97,5 +91,37 @@ public class Frame {
             return FrameStatus.SPARE;
         }
         return FrameStatus.OPEN;
+    }
+
+    /** Cantidad de tiros que necesita este frame para quedar cerrado. */
+    private int expectedRolls() {
+        if (isLastFrame() && earnedBonusRoll()) {
+            return LAST_FRAME_ROLLS;
+        }
+        return REGULAR_ROLLS;
+    }
+
+    /** Solo el frame 10 gana un tiro extra, y solo si cerro con strike o spare. */
+    private boolean earnedBonusRoll() {
+        return isStrike() || isSpare();
+    }
+
+    /** Pinos que siguen en pie justo antes del proximo tiro de este frame. */
+    private int standingPins() {
+        if (isLastFrame() && pinsWereReset()) {
+            return MAX_PINS;
+        }
+        if (isLastFrame() && isStrike()) {
+            return MAX_PINS - rolls.get(1);
+        }
+        return MAX_PINS - pinsKnockedDown();
+    }
+
+    /** En el frame 10 los pinos se levantan de nuevo tras un strike o un spare. */
+    private boolean pinsWereReset() {
+        if (isStrike()) {
+            return rolls.size() == 1 || rolls.get(1) == MAX_PINS;
+        }
+        return isSpare();
     }
 }

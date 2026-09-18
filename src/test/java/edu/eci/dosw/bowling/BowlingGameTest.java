@@ -101,6 +101,72 @@ class BowlingGameTest {
         assertEquals(3, lastFrame(game).getRolls().size());
     }
 
+    @Test
+    @DisplayName("C1 - isComplete() es false al iniciar el juego")
+    void isComplete_atGameStart_isFalse() {
+        BowlingGame game = new BowlingGame();
+
+        assertFalse(game.isComplete());
+    }
+
+    @Test
+    @DisplayName("C2 - isComplete() es false con nueve frames completos")
+    void isComplete_afterNineFrames_isFalse() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 4);
+
+        assertEquals(9, game.getFrames().size());
+        assertFalse(game.isComplete());
+    }
+
+    @Test
+    @DisplayName("C3 - isComplete() es true con diez frames normales")
+    void isComplete_afterTenRegularFrames_isTrue() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 20, 4);
+
+        assertTrue(game.isComplete());
+    }
+
+    @Test
+    @DisplayName("C4 - el spare del frame 10 exige el tiro de bono")
+    void isComplete_withSpareInTenthFrame_requiresBonusRoll() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+        game.roll(5);
+        game.roll(5);
+
+        assertFalse(game.isComplete(), "un spare en el frame 10 otorga un tiro extra");
+
+        game.roll(7);
+        assertTrue(game.isComplete());
+    }
+
+    @Test
+    @DisplayName("C5 - el strike del frame 10 exige los dos tiros de bono")
+    void isComplete_withStrikeInTenthFrame_requiresTwoBonusRolls() {
+        BowlingGame game = new BowlingGame();
+        rollMany(game, 18, 0);
+
+        game.roll(10);
+        assertFalse(game.isComplete());
+
+        game.roll(10);
+        assertFalse(game.isComplete());
+
+        game.roll(10);
+        assertTrue(game.isComplete());
+    }
+
+    @Test
+    @DisplayName("C6 - el juego perfecto queda completo tras el doceavo strike")
+    void isComplete_afterPerfectGame_isTrue() {
+        BowlingGame game = new BowlingGame();
+        rollPerfectGame(game);
+
+        assertTrue(game.isComplete());
+    }
+
     // ------------------------------------------------------------- helpers
 
     /** Juega N tiros iguales. */
