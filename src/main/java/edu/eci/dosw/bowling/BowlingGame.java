@@ -3,37 +3,78 @@ package edu.eci.dosw.bowling;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Motor de un juego de Bowling para un jugador.
- * Un juego tiene exactamente 10 frames.
- */
+// Motor de un juego de bowling para un jugador. Controla el estado del juego:
+// que tiros son validos y cuando termina. El puntaje lo calcula BowlingScorer.
 public class BowlingGame {
 
+    public static final int TOTAL_FRAMES = 10;
+
     private final List<Frame> frames;
+    private final BowlingScorer scorer;
     private int currentFrame;
 
     public BowlingGame() {
         this.frames = new ArrayList<>();
+        this.scorer = new BowlingScorer();
         this.currentFrame = 0;
     }
 
-    /** Registra pinos derribados. Lanza IllegalArgumentException si pines < 0 o > 10.
-     *  Lanza IllegalStateException si el juego ya termino. */
     public void roll(int pins) {
-        // TODO: implementar con TDD (RED -> GREEN -> REFACTOR)
+        validatePinRange(pins);
+        validateGameIsOpen();
+        Frame frame = currentFrameOrCreate();
+        validateFrameCapacity(frame, pins);
+        frame.addRoll(pins);
+        advanceIfClosed(frame);
     }
 
-    /** Puntaje total. Lanza IllegalStateException si el juego no esta completo. */
     public int score() {
-        // TODO: implementar con TDD
-        return 0;
+        if (!isComplete()) {
+            throw new IllegalStateException(
+                    "El juego no esta completo: aun no se puede calcular el puntaje");
+        }
+        return scorer.calculate(frames);
     }
 
-    /** true cuando los 10 frames han sido completados. */
     public boolean isComplete() {
-        // TODO: implementar con TDD
-        return false;
+        return frames.size() == TOTAL_FRAMES
+                && frames.get(TOTAL_FRAMES - 1).isComplete();
     }
 
-    public List<Frame> getFrames() { return List.copyOf(frames); }
+    public List<Frame> getFrames() {
+        return List.copyOf(frames);
+    }
+
+    private void validatePinRange(int pins) {
+        if (pins < 0 || pins > Frame.MAX_PINS) {
+            throw new IllegalArgumentException(
+                    "El numero de pinos debe estar entre 0 y " + Frame.MAX_PINS + ", pero fue: " + pins);
+        }
+    }
+
+    private void validateGameIsOpen() {
+        if (isComplete()) {
+            throw new IllegalStateException("El juego ya termino: no se admiten mas tiros");
+        }
+    }
+
+    private void validateFrameCapacity(Frame frame, int pins) {
+        if (frame.wouldExceedPins(pins)) {
+            throw new IllegalArgumentException(
+                    "Un frame no puede derribar mas de " + Frame.MAX_PINS + " pinos");
+        }
+    }
+
+    private Frame currentFrameOrCreate() {
+        if (currentFrame >= frames.size()) {
+            frames.add(new Frame(currentFrame + 1));
+        }
+        return frames.get(currentFrame);
+    }
+
+    private void advanceIfClosed(Frame frame) {
+        if (frame.isComplete()) {
+            currentFrame++;
+        }
+    }
 }
