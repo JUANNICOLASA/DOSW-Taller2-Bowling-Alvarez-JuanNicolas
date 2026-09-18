@@ -20,7 +20,6 @@ usando JUnit 5, JaCoCo y SonarQube.
 | Nombre | Juan Nicolás Álvarez Muñoz |
 | Código | 1000102233 |
 | Correo | juan.amunoz@mail.escuelaing.edu.co |
-| Repositorio | `<!-- COMPLETAR: URL de GitHub -->` |
 
 ---
 
@@ -49,23 +48,6 @@ motor de puntuación probado.
 | `Frame` | Guarda los tiros de un frame y sabe cuántos pinos quedan en pie, cuándo queda cerrado y si terminó en strike o en spare. Aquí están las reglas propias del frame 10. |
 | `BowlingScorer` | Recibe la lista de frames y devuelve el puntaje total. No guarda estado. Aplica el bono de spare (1 tiro) y el de strike (2 tiros). |
 | `FrameStatus` | Enum con los tres estados: `OPEN`, `SPARE`, `STRIKE`. |
-
-### Estructura
-
-```
-bowling-tdd/
-├── pom.xml
-├── README.md
-├── docs/evidence/            capturas y bitácora de los ciclos TDD
-├── src/main/java/edu/eci/dosw/bowling/
-│   ├── BowlingGame.java
-│   ├── BowlingScorer.java
-│   ├── Frame.java
-│   └── FrameStatus.java
-└── src/test/java/edu/eci/dosw/bowling/
-    ├── BowlingGameTest.java      módulos A y C
-    └── BowlingScorerTest.java    módulo B
-```
 
 ### Casos de prueba
 
@@ -117,10 +99,6 @@ La evidencia principal es el historial de commits: 49 commits en la rama
 `feature/AlvarezJuanNicolas_bowling`, uno por cada fase de cada caso. Son 17
 fases RED y 32 fases GREEN o REFACTOR. La lista completa está en
 [`docs/evidence/bitacora-ciclos-tdd.md`](docs/evidence/bitacora-ciclos-tdd.md).
-
-```bash
-git log --oneline --graph --all
-```
 
 ![Historial de commits con el ciclo RED, GREEN y REFACTOR y los merges de los Pull Requests](docs/evidence/historial-tdd.png)
 
@@ -197,16 +175,6 @@ public boolean wouldExceedPins(int pins) {
 Este cambio fue el que después permitió meter la regla del frame 10 dentro de
 `Frame` sin tocar `BowlingGame`.
 
-### Cómo reproducir cualquier fase
-
-```bash
-git checkout c03f023      # commit RED
-mvn test                  # BUILD FAILURE
-git checkout b4a6064      # commit GREEN
-mvn test                  # BUILD SUCCESS
-git checkout feature/AlvarezJuanNicolas_bowling
-```
-
 ---
 
 ## 4. Cobertura con JaCoCo
@@ -217,11 +185,6 @@ Umbrales configurados en el `pom.xml`, sin modificar:
 |---|---|
 | `LINE` | 85 % |
 | `BRANCH` | 70 % |
-
-```bash
-mvn clean verify
-# reporte HTML en target/site/jacoco/index.html
-```
 
 | Momento | Instrucciones | Ramas | Líneas | Métodos |
 |---|---|---|---|---|
@@ -242,7 +205,7 @@ Después, commit `3cae355`:
 ### Qué pruebas subieron la cobertura
 
 Las 22 pruebas de los módulos A, B y C cubren el flujo principal. El reporte
-mostró cuatro huecos que ninguna de ellas tocaba, y añadí una prueba para cada uno:
+mostró cinco huecos que ninguna de ellas tocaba, y añadí una prueba para cada uno:
 
 | Hueco en el reporte | Prueba añadida |
 |---|---|
@@ -256,22 +219,8 @@ mostró cuatro huecos que ninguna de ellas tocaba, y añadí una prueba para cad
 
 ## 5. Análisis con SonarQube
 
-Servidor levantado con Docker:
-
-```bash
-docker pull sonarqube:26.9.0.129388-community
-docker run -d --name sonarqube -p 9000:9000 sonarqube:26.9.0.129388-community
-```
-
-Análisis:
-
-```bash
-# Windows PowerShell
-$env:SONAR_TOKEN="TU_TOKEN"
-mvn clean verify sonar:sonar "-Dsonar.token=$env:SONAR_TOKEN"
-```
-
-El token se pasa por variable de entorno y no queda en el repositorio.
+Servidor SonarQube Community 26.9.0 levantado en Docker sobre `localhost:9000`.
+El token de análisis se pasa por variable de entorno y no queda en el repositorio.
 `.sonarqube/`, `.scannerwork/` y `sonar-project.properties` están en el `.gitignore`.
 
 ### Resultados
@@ -314,16 +263,12 @@ a qué lo atribuyo.
 Los cambios llegaron a `develop` solo por Pull Request. No hay commits directos
 sobre `develop` ni sobre `main`.
 
-| PR | Módulo | Commits | Fecha de merge | Enlace |
+| PR | Módulo que cubre | Commits | Fecha de merge | Enlace |
 |---|---|---|---|---|
-| #1 | Módulo A, validaciones y estado de `roll()` | 21 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
-| #2 | Módulo C, reglas de cierre del juego | 8 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
-| #3 | Módulo B, cálculo de puntaje con bonos | 20 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
-| #4 | Documentación y evidencias | 1 | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` |
-
-```bash
-git log --oneline --graph develop
-```
+| #1 | Módulo A, validaciones y estado de `roll()` | 21 | | |
+| #2 | Módulo C, reglas de cierre del juego | 8 | | |
+| #3 | Módulo B, cálculo de puntaje con bonos | 20 | | |
+| #4 | Documentación y evidencias | 1 | | |
 
 ---
 
@@ -415,13 +360,3 @@ confirmación, no como descubrimiento, a diferencia de JaCoCo, que sí destapó
 cinco ramas sin probar. Supongo que su valor real aparece en proyectos más
 grandes, con más gente escribiendo y sin la costumbre de refactorizar en cada
 ciclo.
-
----
-
-## 8. Cómo ejecutar
-
-```bash
-mvn test              # 29 pruebas
-mvn clean verify      # pruebas más cobertura, falla si baja del 85 %
-mvn clean verify sonar:sonar -Dsonar.token=$SONAR_TOKEN
-```
