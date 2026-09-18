@@ -126,6 +126,8 @@ El historial de commits es la evidencia principal: **49 commits** en la rama
 git log --oneline --graph --all
 ```
 
+![Historial de commits: ciclo RED → GREEN → REFACTOR y merges de los Pull Requests](docs/evidence/historial-tdd.png)
+
 ### Ciclo documentado: caso A4 — dos tiros de un frame no pueden superar 10 pinos
 
 #### 🔴 RED — `c03f023` · `test: RED - A4 dos tiros de un frame no pueden superar 10 pinos`
@@ -153,7 +155,7 @@ aceptaba y la prueba falló:
 [INFO] BUILD FAILURE
 ```
 
-`<!-- CAPTURA: docs/evidence/a4-red.png -->`
+![Fase RED del caso A4: la prueba existe y falla porque el código aún no valida la capacidad del frame](docs/evidence/a4-red.png)
 
 #### 🟢 GREEN — `b4a6064` · `feat: GREEN - A4 valida la capacidad de pinos del frame`
 
@@ -177,7 +179,7 @@ frame.addRoll(pins);
 [INFO] BUILD SUCCESS
 ```
 
-`<!-- CAPTURA: docs/evidence/a4-green.png -->`
+![Fase GREEN del caso A4: las mismas 4 pruebas pasan con el código mínimo](docs/evidence/a4-green.png)
 
 #### 🔵 REFACTOR — `46dfb45` · `refactor: mueve la regla de capacidad de pinos a Frame`
 
@@ -228,10 +230,24 @@ mvn clean verify
 # reporte HTML: target/site/jacoco/index.html
 ```
 
-| Momento | Cobertura de líneas | Cobertura de ramas | Captura |
-|---|---|---|---|
-| Antes de las pruebas de borde (`bc78fc3`) | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` | `<!-- docs/evidence/jacoco-antes.png -->` |
-| Después de las pruebas de borde (`3cae355`) | `<!-- COMPLETAR -->` | `<!-- COMPLETAR -->` | `<!-- docs/evidence/jacoco-despues.png -->` |
+Resultado medido con JaCoCo 0.8.15 sobre el bundle `Bowling TDD`:
+
+| Momento | Instrucciones | Ramas | Líneas | Métodos |
+|---|---|---|---|---|
+| Antes de las pruebas de borde (`bc78fc3`) | 95 % (20 de 478 sin cubrir) | 92 % (6 de 82) | 96 / 100 | 30 / 31 |
+| Después de las pruebas de borde (`3cae355`) | **100 %** (0 de 478) | **97 %** (2 de 82) | **100 / 100** | **31 / 31** |
+
+Los dos momentos superan los umbrales del `pom.xml`. Las cinco pruebas de borde
+cerraron las 4 líneas y el método que quedaban sin ejercitar, y subieron la
+cobertura de ramas de 92 % a 97 %.
+
+**Antes** — commit `bc78fc3`
+
+![Reporte de JaCoCo antes de las pruebas de borde: 95 % de instrucciones y 92 % de ramas](docs/evidence/jacoco-antes.png)
+
+**Después** — commit `3cae355`
+
+![Reporte de JaCoCo después de las pruebas de borde: 100 % de instrucciones y 97 % de ramas](docs/evidence/jacoco-despues.png)
 
 ### Qué pruebas subieron la cobertura
 
