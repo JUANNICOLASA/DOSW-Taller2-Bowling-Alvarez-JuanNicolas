@@ -265,10 +265,10 @@ sobre `develop` ni sobre `main`.
 
 | PR | Módulo que cubre | Commits | Fecha de merge | Enlace |
 |---|---|---|---|---|
-| #1 | Módulo A, validaciones y estado de `roll()` | 21 | | |
-| #2 | Módulo C, reglas de cierre del juego | 8 | | |
-| #3 | Módulo B, cálculo de puntaje con bonos | 20 | | |
-| #4 | Documentación y evidencias | 1 | | |
+| #1 | Módulo A, validaciones y estado de `roll()` | 21 | 17/09/2026, 10:13 p. m. | [pull/1](https://github.com/JUANNICOLASA/DOSW-Taller2-Bowling-Alvarez-JuanNicolas/pull/1) |
+| #2 | Módulo C, reglas de cierre del juego | 8 | 17/09/2026, 10:16 p. m. | [pull/2](https://github.com/JUANNICOLASA/DOSW-Taller2-Bowling-Alvarez-JuanNicolas/pull/2) |
+| #3 | Módulo B, cálculo de puntaje con bonos | 20 | 17/09/2026, 10:17 p. m. | [pull/3](https://github.com/JUANNICOLASA/DOSW-Taller2-Bowling-Alvarez-JuanNicolas/pull/3) |
+| #4 | Documentación y evidencias | 5 | 17/09/2026, 10:20 p. m. | [pull/4](https://github.com/JUANNICOLASA/DOSW-Taller2-Bowling-Alvarez-JuanNicolas/pull/4) |
 
 ---
 
